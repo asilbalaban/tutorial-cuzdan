@@ -1,20 +1,27 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class cuzdan_model extends CI_Model
+
+Class Cuzdan_Model extends CI_Model
 {
-	function paraHareketiEkle ($data)
+
+	function __construct()
 	{
-		$sonuc = $this->db->insert('paraHareketleri', $data);
-		return $sonuc;
+		parent::__construct();
 	}
 
-	function getParaHareketleri ($tur)
+	function paraHareketiEkle($data)
+	{
+		return $this->db->insert('paraHareketleri', $data);
+	}
+
+	function getParaHareketleri($islem)
 	{
 		return $this->db->select('*')
 		->from('paraHareketleri')
-		->where('tur', $tur)
+		->where('islem', $islem)
 		->get()
 		->result_array();
 	}
-}
 
+
+}

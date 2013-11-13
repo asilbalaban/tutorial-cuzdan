@@ -3,9 +3,26 @@
 class cuzdan extends Admin_Controller 
 {
 
+	/*
+
+	TABLE YAPISI SQL SORGUSU
+	--------------------------------------------------
+	CREATE TABLE IF NOT EXISTS `paraHareketleri` (
+	  `id` int(11) NOT NULL AUTO_INCREMENT,
+	  `islem` varchar(25) NOT NULL,
+	  `tutar` float NOT NULL,
+	  `aciklama` mediumtext NOT NULL,
+	  `tarih` datetime NOT NULL,
+	  PRIMARY KEY (`id`)
+	) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+	*/
+
 	public function __construct ()
 	{
 		parent::__construct();
+
+		$this->load->model('cuzdan_model');
 	}
 
 	public function index()
@@ -15,8 +32,29 @@ class cuzdan extends Admin_Controller
 
 	public function genelBakis()
 	{
-		echo 'Genel bakış sayfasına hoşgeldiniz. Bu sayfa sadece yöneticiler tarafından görülebilir. <a href="'.base_url('auth/cikis').'">Çıkış Yap</a>';
-		var_dump($this->session->userdata('login'));
+		$data['gelirler'] = $this->cuzdan_model->getParaHareketleri('gelir');
+		$data['giderler'] = $this->cuzdan_model->getParaHareketleri('gider');
+
+		$this->load->view('cuzdan/genel_bakis', $data);
+	}
+
+	public function paraHareketiEkle()
+	{
+		$data['tutar'] 		= $this->input->post('tutar');
+		$data['aciklama'] 	= $this->input->post('aciklama');
+		$data['tarih']		= date('Y-m-d h:m:s');
+		$data['islem']		= $this->input->post('islem');
+
+		$sonuc = $this->cuzdan_model->paraHareketiEkle($data);
+
+		if ($sonuc == true) {
+			$this->session->set_flashdata('mesaj', "Para hareketi başarıyla eklendi");
+		} else {
+			$this->session->set_flashdata('mesaj-hata', "Para hareketi eklenirken bir sorun oluştu lütfen tekrar deneyin");
+		}
+
+		redirect(base_url('cuzdan/genelBakis'));
+
 	}
 
 }
