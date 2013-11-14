@@ -5,3 +5,7 @@
 .h30 {
 	height:30px;
 }
+
+.clear {
+	clear:both;
+}

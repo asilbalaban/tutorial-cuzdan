@@ -32,8 +32,31 @@ class cuzdan extends Admin_Controller
 
 	public function genelBakis()
 	{
-		$data['gelirler'] = $this->cuzdan_model->getParaHareketleri('gelir');
-		$data['giderler'] = $this->cuzdan_model->getParaHareketleri('gider');
+		// Bitiş set edildiyse
+		if (isset($_GET['bitis'])) {
+			// değişkene atama yap
+			$data['bitisTarihi'] 		= $_GET['bitis'];	
+		} else {
+			$data['bitisTarihi']		= date('Y-m-d');
+		}
+
+		// Başlangıç set edildiyse
+		if (isset($_GET['baslangic'])) {
+			// $data['baslangicTarihi'] değişkene atama yap
+			$data['baslangicTarihi'] 	= $_GET['baslangic'];
+		} else {
+			$data['baslangicTarihi']	= date('Y-m-d', strtotime($data['bitisTarihi']."-1 Month"));
+		}
+
+		$bitisTarihi = date('Y-m-d', strtotime($data['bitisTarihi']."+1 Day"));
+
+		$toplamGelir = null;
+		$toplamGider = null;
+
+		$data['gelirler'] = $this->cuzdan_model->getParaHareketleri('gelir', $data['baslangicTarihi'], $bitisTarihi, $toplamGelir);
+		$data['giderler'] = $this->cuzdan_model->getParaHareketleri('gider', $data['baslangicTarihi'], $bitisTarihi, $toplamGider);
+		$data['toplamGelir'] = $toplamGelir;
+		$data['toplamGider'] = $toplamGider;
 
 		$this->load->view('cuzdan/genel_bakis', $data);
 	}

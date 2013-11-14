@@ -10,9 +10,41 @@
 <body>
 	<div class="container">
 		<div class="well">
-			Bu bölüme sadece adminler erişebilir <a href="<?php echo base_url('auth/cikis'); ?>">Çıkış Yap</a>
+			<div class="pull-left">
+				Hoşgeldiniz, admin <a href="<?php echo base_url('auth/cikis'); ?>">Çıkış Yap</a>
+				<br />
+				<br />
+				Toplam Gelir: <?php echo $toplamGelir; ?><br />
+				Toplam Gider: <?php echo $toplamGider; ?><br />
+				Kalan Para: <?php echo $toplamGelir - $toplamGider; ?>
+			</div>
+
+			<div class="pull-right">
+				<form action="<?php echo base_url('cuzdan/genelBakis'); ?>" method="get">
+					<input type="text" name="baslangic" class="form-control" placeholder="Başlangıç YYYY-MM-DD" value="<?php echo $baslangicTarihi; ?>" />
+					<input type="text" name="bitis" class="form-control" placeholder="Bitiş YYYY-MM-DD" value="<?php echo $bitisTarihi; ?>" />
+					<input type="submit" value="filtrele" class="btn btn-default btn-block" />
+				</form>
+			</div>
+			<div class="clear"></div>
 		</div>
 		
+			<?php 
+				if ($this->session->flashdata('mesaj') != false) {
+					echo '<div class="alert alert-info">';
+					echo $this->session->flashdata('mesaj');
+					echo '</div>';
+				}
+			?>
+		
+			<?php 
+				if ($this->session->flashdata('mesaj-hata') != false) {
+					echo '<div class="alert alert-danger">';
+					echo $this->session->flashdata('mesaj-hata');
+					echo '</div>';
+				}
+			?>
+
 		<div class="col-md-6 well">
 			<h2>Giderler</h2>
 			<form class="form" action="<?php echo base_url('cuzdan/paraHareketiEkle'); ?>" method="post">
